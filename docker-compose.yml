@@ -1,0 +1,74 @@
+services:
+  # 1. База данных PostgreSQL
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d app"]
+      interval: 5s
+      retries: 10
+    networks:
+      - warehouse-net
+
+  # 2. Сервис товаров (каталог)
+  products:
+    build: ./products
+    environment:
+      ConnectionStrings__Default: Host=db;Database=app;Username=postgres;Password=1234
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - warehouse-net
+
+  # 3. Сервис остатков (приход/расход)
+  stock:
+    build: ./stock
+    environment:
+      ConnectionStrings__Default: Host=db;Database=app;Username=postgres;Password=1234
+      ProductsService__BaseUrl: http://products:8080
+      NotificationsService__BaseUrl: http://notifications:8080
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - warehouse-net
+
+  # 4. Сервис уведомлений
+  notifications:
+    build: ./notifications
+    environment:
+      ConnectionStrings__Default: Host=db;Database=app;Username=postgres;Password=1234
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - warehouse-net
+
+  # 5. API Gateway (точка входа)
+  gateway:
+    build: ./gateway
+    ports:
+      - "8080:8080"
+    environment:
+      ProductsService__BaseUrl: http://products:8080
+      StockService__BaseUrl: http://stock:8080
+      NotificationsService__BaseUrl: http://notifications:8080
+    depends_on:
+      - products
+      - stock
+      - notifications
+    networks:
+      - warehouse-net
+
+volumes:
+  db_data:
+
+networks:
+  warehouse-net:
+    driver: bridge
