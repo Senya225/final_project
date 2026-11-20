@@ -1,6 +1,15 @@
+<<<<<<< HEAD
 @Gateway.Api_HostAddress = http://localhost:5081
 
 GET {{Gateway.Api_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+=======
+@Gateway.Api_HostAddress = http://localhost:5081
+
+GET {{Gateway.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+>>>>>>> 58f61dcdc27385c2eb5e880a6b686e822e0a27b5

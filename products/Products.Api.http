@@ -1,6 +1,15 @@
+<<<<<<< HEAD
 @Products.Api_HostAddress = http://localhost:5126
 
 GET {{Products.Api_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+=======
+@Products.Api_HostAddress = http://localhost:5126
+
+GET {{Products.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+>>>>>>> 58f61dcdc27385c2eb5e880a6b686e822e0a27b5

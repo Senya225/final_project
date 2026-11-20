@@ -1,5 +1,8 @@
 fastapi
 uvicorn
 httpx
+<<<<<<< HEAD
 sqlalchemy
 psycopg2-binary
+=======
+>>>>>>> 58f61dcdc27385c2eb5e880a6b686e822e0a27b5

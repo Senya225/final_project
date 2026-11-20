@@ -1,4 +1,8 @@
 services:
+<<<<<<< HEAD
+=======
+  # 1. База данных PostgreSQL
+>>>>>>> 58f61dcdc27385c2eb5e880a6b686e822e0a27b5
   db:
     image: postgres:16
     environment:
@@ -14,16 +18,25 @@ services:
     networks:
       - warehouse-net
 
+<<<<<<< HEAD
   products:
     build: ./products
     environment:
       DATABASE_URL: postgresql://postgres:1234@db:5432/app
+=======
+  # 2. Сервис товаров (каталог)
+  products:
+    build: ./products
+    environment:
+      ConnectionStrings__Default: Host=db;Database=app;Username=postgres;Password=1234
+>>>>>>> 58f61dcdc27385c2eb5e880a6b686e822e0a27b5
     depends_on:
       db:
         condition: service_healthy
     networks:
       - warehouse-net
 
+<<<<<<< HEAD
   stock:
     build: ./stock
     environment:
@@ -39,6 +52,33 @@ services:
     networks:
       - warehouse-net
 
+=======
+  # 3. Сервис остатков (приход/расход)
+  stock:
+    build: ./stock
+    environment:
+      ConnectionStrings__Default: Host=db;Database=app;Username=postgres;Password=1234
+      ProductsService__BaseUrl: http://products:8080
+      NotificationsService__BaseUrl: http://notifications:8080
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - warehouse-net
+
+  # 4. Сервис уведомлений
+  notifications:
+    build: ./notifications
+    environment:
+      ConnectionStrings__Default: Host=db;Database=app;Username=postgres;Password=1234
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - warehouse-net
+
+  # 5. API Gateway (точка входа)
+>>>>>>> 58f61dcdc27385c2eb5e880a6b686e822e0a27b5
   gateway:
     build: ./gateway
     ports:
@@ -59,4 +99,8 @@ volumes:
 
 networks:
   warehouse-net:
+<<<<<<< HEAD
     driver: bridge
+=======
+    driver: bridge
+>>>>>>> 58f61dcdc27385c2eb5e880a6b686e822e0a27b5
